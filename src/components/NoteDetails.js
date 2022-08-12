@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import NotesService from "../services/NotesService";
 
 const NoteDetails = () => {
-  const id = useParams();
+  const { id } = useParams();
   const [currentNote, setCurrentNote] = useState("");
+
   useEffect(() => {
     NotesService.get(id)
       .then((note) => {
@@ -13,7 +14,7 @@ const NoteDetails = () => {
       .catch((error) => {
         console.log("Something went wrong...", console.error());
       });
-  }, []);
+  });
   return (
     <div className="note-details main-content">
       <article>
