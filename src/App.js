@@ -5,6 +5,7 @@ import "./App.css";
 import NotesList from "./components/NotesList";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
+import AddNote from "./components/AddNote";
 function App() {
   return (
     <BrowserRouter>
@@ -13,7 +14,8 @@ function App() {
         <div>
           <Switch>
             <Route exact path="/" component={NotesList} />
-            <Route exact path="*" component={NotFound} />
+            <Route path="/add" component={AddNote} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </div>
       </div>
