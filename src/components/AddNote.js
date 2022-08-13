@@ -6,13 +6,19 @@ const AddNote = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("programming");
+  const [errors, setErrors] = useState(false);
   const history = useHistory();
   const { id } = useParams();
 
   const saveNote = (e) => {
     e.preventDefault();
-    const note = { title, body, category, id };
+    if (!title || !body) {
+      setErrors(true);
+      return;
+    }
+
     if (id) {
+      const note = { title, body, category, id };
       NotesService.update(note)
         .then((response) => {
           console.log("Note Updated Successfully.", response.data);
@@ -22,6 +28,7 @@ const AddNote = () => {
           console.log("something went wrong.", error);
         });
     } else {
+      const note = { title, body, category };
       NotesService.create(note)
         .then((response) => {
           console.log("Note Added Successfully", response.data);
@@ -50,6 +57,11 @@ const AddNote = () => {
     <div className="create">
       <div className="text-center">
         <h5>{id ? "Update a Note" : "Add a New Note"}</h5>
+        {errors && (
+          <span style={{ color: "red", fontStyle: "italic" }}>
+            please enter mondatory fields
+          </span>
+        )}
       </div>
       <form>
         <div className="form-group">

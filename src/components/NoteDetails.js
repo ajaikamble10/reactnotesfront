@@ -42,7 +42,7 @@ const NoteDetails = () => {
           <div className="mb-3">{currentNote.body}</div>
         </article>
         <button className="ml-2" onClick={handleUpdate}>
-          Update
+          Edit
         </button>
         <button className="ml-2" onClick={handleDelete}>
           Delete
