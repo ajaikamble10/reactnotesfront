@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import NotesService from "../services/NotesService";
 
 const AddNote = () => {
@@ -7,21 +7,50 @@ const AddNote = () => {
   const [body, setBody] = useState("");
   const [category, setCategory] = useState("programming");
   const history = useHistory();
+  const { id } = useParams();
+
   const saveNote = (e) => {
     e.preventDefault();
-    const note = { title, body, category };
-
-    NotesService.create(note)
-      .then((response) => {
-        console.log("Note Added Successfully", response.data);
-        history.push("/");
-      })
-      .catch((error) => {
-        console.log("Something went wrong", console.error());
-      });
+    const note = { title, body, category, id };
+    if (id) {
+      NotesService.update(note)
+        .then((response) => {
+          console.log("Note Updated Successfully.", response.data);
+          history.push("/");
+        })
+        .catch((error) => {
+          console.log("something went wrong.", error);
+        });
+    } else {
+      NotesService.create(note)
+        .then((response) => {
+          console.log("Note Added Successfully", response.data);
+          history.push("/");
+        })
+        .catch((error) => {
+          console.log("Something went wrong", console.error());
+        });
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      NotesService.get(id)
+        .then((note) => {
+          setTitle(note.data.title);
+          setBody(note.data.body);
+          setCategory(note.data.category);
+        })
+        .catch((error) => {
+          console.log("something went wrong...", error);
+        });
+    }
+  }, []);
   return (
     <div className="create">
+      <div className="text-center">
+        <h5>{id ? "Update a Note" : "Add a New Note"}</h5>
+      </div>
       <form>
         <div className="form-group">
           <label htmlFor="title">
@@ -63,7 +92,9 @@ const AddNote = () => {
           </select>
         </div>
         <div className="text-center">
-          <button onClick={(e) => saveNote(e)}>Add Note</button>
+          <button onClick={(e) => saveNote(e)}>
+            {id ? "Update Note" : "Add Note"}
+          </button>
         </div>
       </form>
     </div>
